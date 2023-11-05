@@ -82,15 +82,17 @@ export const scrollBasedToggle = (sticky, items, options = {}) => {
 * 
 * @разметка:
 * 
-<div class="someblock" data-shift="-0.5"></div>
-<div class="someblock" data-shift="100px" data-repeat></div>
-<div class="someblock" data-shift="0.5" data-repeat></div>
+<div class="someblock" data-animation="-0.5"></div>
+<div class="someblock" data-animation="0" data-repeat></div>
+<div class="someblock" data-animation="0.5" data-repeat></div>
+<div class="someblock" data-animation="200px"></div>
 * 
 * @параметры разметки: 
 * 
-* data-shift="0.5" - множитель показывающий на какую часть от своей 
-* высоты (или абсолютную высоту, если есть px), должен показаться снизу элемент, 
-* чтобы добавился класс. Принимает положительные и отрицательные значения.
+* data-animation="0.5" - показатель смещения. Относительный множитель 
+* показывающий на какую часть от своей высоты, должен показаться снизу 
+* элемент, чтобы добавился класс. Принимает положительные и отрицательные 
+* значения. Так же, может абсолютно задаваться в пикселях. 
 * 
 * data-repeat - убирать класс, если элемент вновь уходит за нижндюю
 * границу браузера
@@ -98,89 +100,123 @@ export const scrollBasedToggle = (sticky, items, options = {}) => {
 * @вызов:
 * 
 import { scrollClassToggle } from "../../js/libs/scroll";
-scrollClassToggle('shift', 'active');
+let toggle = scrollClassToggle({
+	nodes: document.querySelectorAll('.someblock'), // это нужно, если есть элементы имеющие СВОЮ прокрутку, которую надо слушать
+	data: 'animation',
+	class: 'showed',
+	ontoggle: (item) => {
+
+	}
+});
+toggle.init(); // переинициализация
+toggle.init(false); // удаление добавленных классов и отвязка обработчиков
+*
 */
 
-export const scrollClassToggle = (data = 'animation', cls = "active") => {
-	const classToggle = (item) => {
-		const repeat = item.dataset['repeat'] != undefined;
-		const box = item.getBoundingClientRect();
-		
-		let shift = item.dataset[`${data}`] || 0;
-		shift = shift.includes('px') ? box.height - parseFloat(shift) : box.height * shift;
+export const scrollClassToggle = (options = {}) => {
+	class Toggle {
 	
-		const over = box.bottom + shift > 0; // выше экрана
-		const under = box.bottom - shift - window.innerHeight < 0; // ниже экрана
+		constructor(options) {
+			this.options = {
+				throttle: 250,
+				nodes: [],
+				data: 'animation',
+				class: 'active',
+				...options
+			}
 
-		if (repeat || !item.classList.contains(`${cls}`))
-			item.classList[(over && under) ? 'add': 'remove'](`${cls}`);
-	};
-	
-	document.querySelectorAll(`[data-${data}]`).forEach((item) => {
-		window.addEventListener('scroll', () => classToggle(item));
-		classToggle(item);
-	});
+			this.nodes = [ window, ...this.options.nodes ];
+			this.init();
+		}
+
+		_throttle = (fn) => {
+			let timeout = null;
+		
+			return (...args) => {
+				if (timeout === null) {
+					
+					timeout = setTimeout(() => {
+						fn.apply(this, args);
+						timeout = null;
+					}, this.throttle)
+				}
+			}
+		}
+
+		toggle = (item) => {
+			const repeat = item.dataset['repeat'] != undefined;
+			const box = item.getBoundingClientRect();
+			
+			let shift = item.dataset[`${this.options.data}`] || '0';
+			shift = shift.includes('px') ? box.height - parseFloat(shift) : box.height * shift;
+		
+			const over = box.bottom + shift > 0;
+			const under = box.bottom - shift - window.innerHeight < 0;
+
+			if (repeat || !item.classList.contains(`${this.options.class}`))
+				item.classList[(over && under) ? 'add': 'remove'](`${this.options.class}`);
+
+			if (typeof this.options.ontoggle === 'function') 
+				return this.options.ontoggle.call(item);
+		};
+
+		init(flag = true) {
+			if (flag) {
+				this.items = [...document.querySelectorAll(`[data-${this.options.data}]`)].map(item => {
+					item.handler = this._throttle(this.toggle.bind(this, item));
+					return item;
+				});
+			}
+
+			this.items.forEach((item) => {
+				item.classList.remove(`${this.options.class}`);
+
+				this.nodes.forEach(node => {
+					node[(flag ? 'add' : 'remove') + 'EventListener']('scroll', item.handler)
+				});
+				
+				flag && this.toggle(item);
+			});
+		}
+	}
+
+	return new Toggle(options);
 }
 
 
 /* 
 * Простой, вертикальный параллакс-эффект. Создает для указанного
-* блока - блок-подложку, с фоном задаваемым атрибутом data-image.
+* блока - блок-подложку, с фоновым изображением исходного блока.
 * При прокручивании страницы, смещает подложку относительно родительского
 * блока, со скоростью определяемой коэффициентом из атрибута data-speed.
 * 
 * @исходная разметка 
 * 
-<div class="someblock" data-image="https://source.unsplash.com/random/350x650?nature" data-speed="7"></div>
+<div class="someblock" data-speed="7"></div>
 * 
 * @параметры разметки
 * data-image - ссылка на изображение для подложки
 * data-speed - коэффициент увеличения скорости эффекта
 * 
-* @результирующая разметка
-* 
-* <div class="someblock parallax" 
-* 	data-image="https://source.unsplash.com/random/350x650?nature" 
-* 	data-speed="7" 
-* 	style="
-* 		position: relative; 
-* 		overflow: hidden;"
-* >
-* 	<div class="parallax__underlay" 
-* 		style="
-* 			background-size: cover; 
-* 			background-position: center center; 
-* 			background-repeat: no-repeat; 
-* 			background-color: transparent; 
-* 			background-image: url(https://source.unsplash.com/random/350x650?nature); 
-* 			position: absolute; 
-* 			z-index: 1; 
-* 			inset: -206.067px 0px 0px; 
-* 			transform: translateY(108.092px);"
-* 	>
-* 	</div>
-* </div>
-* 
 * @вызов
 * 
 import { makeParallax } from "../../js/libs/scroll";
-makeParallax(document.querySelectorAll('.someblock'));
+makeParallax('.someblock');
 * 
 * @параметры вызова:
 * 
 * cls - имя класса в динамически создаваемой разметке
 */
 
-export const makeParallax = (items, cls = "parallax") => {
-	for (let i = 0; i < items.length; i++) {
-		const item = items[i];
+export const makeParallax = (selector, cls = "parallax") => {
+	document.querySelectorAll(selector).forEach(item => {
 		const _underlay = document.createElement('div');
 		const styles = {
 			backgroundSize: 'cover',
 			backgroundPosition: 'center',
 			backgroundRepeat: 'no-repeat',
 			backgroundColor: 'transparent',
-			backgroundImage: `url(${item.dataset.image})`,
+			backgroundImage: `${getComputedStyle(item, null).backgroundImage}`,
 			position: 'absolute',
 			zIndex: 1,
 			bottom: 0,
@@ -199,7 +235,7 @@ export const makeParallax = (items, cls = "parallax") => {
 
 		const translateY = () => {
 			const box = item.getBoundingClientRect();
-			const speed = item.dataset.speed || 10;
+			const speed = Math.min(Math.max(0, item.dataset.speed || 0.5), 1);
 			const screen = window.innerHeight;
 			
 			if ((box.top < screen) && (box.bottom > 0)) {
@@ -210,7 +246,7 @@ export const makeParallax = (items, cls = "parallax") => {
 
 		window.addEventListener('scroll', translateY);
 		translateY();
-	}
+	});
 }
 
 /* 

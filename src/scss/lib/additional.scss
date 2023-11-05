@@ -3,7 +3,6 @@
 $basesize: 16; 
 $images-path: "images/"; 
 
-
 /* Функции */
 
 // Замена подстроки в строке
@@ -26,21 +25,28 @@ $images-path: "images/";
 	@return $str;
 }
 
+// сбросить размерность у чисел
+@function num($number) {
+	@if type-of($number) == 'number' and not unitless($number) {
+		@return math.div($number, ($number * 0 + 1));
+	}
+
+	@return $number;
+}
 
 /* Утилиты */
 
 // подключить шрифт 
-@mixin font-face($file, $family, $weight: "normal", $folder: "fonts/") { 
+@mixin font-face($file, $family, $weight: "normal", $style: "normal", $folder: "fonts/") { 
 	@font-face { 
-		font-family: $family; 
-		src: url("#{$folder}#{$file}.eot?#iefix") format('embedded-opentype'), 
-			url("#{$folder}#{$file}.woff") format('woff'), 
-			url("#{$folder}#{$file}.woff2") format('woff2'), 
-			url("#{$folder}#{$file}.ttf")  format('truetype'); 
-		font-weight: $weight; 
-		font-style: normal; 
+		font-family: $family;
+		src: url("#{$folder}#{$file}.woff") format('woff'),
+			url("#{$folder}#{$file}.woff2") format('woff2'),
+			url("#{$folder}#{$file}.ttf")  format('truetype');
+		font-weight: $weight;
+		font-style: $style;
 	} 
-} 
+}
   	
 // вставить символ псевдографики 
 @mixin inssymbol( $font, $symbol: '\0000', $pseudo: "after") { 
@@ -209,6 +215,7 @@ $images-path: "images/";
 
 // общий сброс элемента
 %reset-input {
+	font-size: #{$basesize}px;
 	box-sizing: border-box;
 	vertical-align: middle;
 	display: inline-block;
@@ -230,4 +237,18 @@ $images-path: "images/";
 	text-decoration: none;
 	cursor: pointer;
 	color: inherit;
+}
+
+// плавное изменение размера на заданном диапазоне ширины экрана
+@mixin range($currentValue, $targetValue, $currentScreen, $targetScreen, $property: 'font-size') {
+	$diffValue: num($currentValue) - num($targetValue);
+	$diffScreen: num($currentScreen) - num($targetScreen);
+
+	@media (max-width: $currentScreen) {
+		#{$property}: calc(#{$targetValue} + #{$diffValue} * ((100vw - #{$targetScreen}) / #{$diffScreen}));
+	}
+	
+	@media (max-width: $targetScreen) {
+		#{$property}: $targetValue;
+	}
 }

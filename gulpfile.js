@@ -22,11 +22,8 @@ let webconf = {
 				}
 		}]
 	},
-	externals: {
-		jquery: 'jQuery'
-	},
 	mode: isDev ? 'development' : 'production',
-	devtool: isDev ? 'eval-source-map' : 'none'
+	devtool: isDev ? 'eval-source-map' : false
 };
 
 let pth = {
@@ -155,7 +152,7 @@ function fonts() {
 	return gulp.src(pth.src.fnts)
 		.pipe($.newer(pth.pbl.fnts))
 		.pipe($.fonter({
-			formats: ['woff', 'ttf', 'eot'],
+			formats: ['woff', 'ttf'],
 			compound2simple: true
 		}))		
 		.pipe(gulp.dest(pth.pbl.fnts))
