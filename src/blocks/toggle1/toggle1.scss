@@ -1,0 +1,42 @@
+@use 'lib' as *;
+
+.toggle1 {
+	$self: &;
+	@extend %reset-button;
+	display: flex;
+	width: 32px;
+	height: 32px;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
+	gap: 5px;
+
+	&.opened {
+		gap: 0;
+
+		span {
+			&:nth-child(1) {
+				rotate: 45deg;
+				translate: 0 1px;
+			}
+	
+			&:nth-child(2) {
+				display: none;
+			}
+	
+			&:nth-child(3) {
+				rotate: -45deg;
+				translate: 0 -1px;
+			}
+		}
+	}
+
+	span {
+		height: 2px;
+		width: 24px;
+		border-radius: 10px;
+		background-color: var(--black);
+		transition: rotate 0.3s, translate 0.3s;
+		transform-origin: center;
+	}
+}

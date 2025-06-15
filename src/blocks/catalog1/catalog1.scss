@@ -1,0 +1,91 @@
+@use 'lib' as *;
+
+.catalog1 {
+	$self: &;
+
+	&__inner {
+		padding-top: 30px;
+		
+		@include media('<=md') {
+			padding-top: 20px;
+		}
+		
+		@include media('<=xxs') {
+			padding-top: 15px;
+		}
+	}
+
+	&__top {
+		display: flex;
+		gap: 24px;
+		align-items: center;
+
+		@include media('<=sm') {
+			flex-flow: column nowrap;
+			align-items: flex-start;
+		}
+	}
+
+	&__title {
+		margin-right: auto;
+	}
+	
+	&__select {
+		max-width: 300px;
+		width: 100%;
+
+		@include media('<=sm') {
+			max-width: none;
+		}
+	}
+
+	&__content {
+		display: grid;
+		grid-template-columns: 300px 1fr;
+		grid-gap: 24px;
+		
+		@include media('<=xlg') {
+			grid-template-columns: 270px 1fr;
+		}
+		
+		@include media('<=lg') {
+			grid-template-columns: 300px 1fr;
+		}
+		
+		@include media('<=md') {
+			grid-template-columns: 260px 1fr;
+			grid-gap: 16px;
+		}
+				
+		@include media('<=sm') {
+			display: block;
+		}
+	}
+
+	&__aside {
+		grid-column: span 1;
+	}
+
+	&__items {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		align-content: start;
+		grid-gap: 24px;
+		
+		@include media('<=lg') {
+			grid-template-columns: repeat(2, 1fr);
+		}
+		
+		@include media('<=md') {
+			grid-gap: 16px;
+		}
+		
+		@include media('<=xxs') {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	&__item {
+		grid-column: span 1;
+	}
+}

@@ -1,0 +1,51 @@
+@use 'lib' as *;
+
+.filter1 {
+	$self: &;
+	background-color: var(--white);
+
+	&.opened {
+		#{$self}__title svg {
+			rotate: 180deg;
+		}
+
+		#{$self}__body {
+			display: block;
+		}
+	}
+
+	&__title {
+		padding: 10px;
+		font-weight: 500;
+		background-color: var(--bright);
+		justify-content: space-between;
+		align-items: center;
+		cursor: pointer;
+		display: flex;
+		gap: 16px;
+
+		span {
+
+		}
+
+		svg {
+			transition: rotate 0.2s;
+			fill: var(--grey);
+			aspect-ratio: 1;
+			display: block;
+			width: 18px;
+		}
+	}
+
+	&__body {
+		border: 1px solid var(--bright);
+		border-top: none;
+		display: none;
+	}
+	
+	&__wrapper {
+		display: flex;
+		flex-flow: column nowrap;
+		padding: 12px;
+	}
+}

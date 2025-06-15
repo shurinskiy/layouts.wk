@@ -1,0 +1,37 @@
+@use 'lib' as *;
+
+.chbox2 {
+	$self: &;
+	gap: 8px;
+	flex-flow: row wrap;
+
+	&__input {
+		display: block;
+		line-height: 1.0;
+		font-size: 14px;
+		cursor: pointer;
+		
+		span {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+			padding: 5px 10px 6px;
+			border: 1px solid var(--light);
+			transition: border-color 0.3s, background-color 0.3s;
+			border-radius: 4px;
+		}
+		
+		input[type='checkbox'] {
+			display: none;
+
+			&:checked ~ span {
+				background-color: var(--dark);
+				border-color: var(--dark);
+				color: var(--white);
+			}
+		}
+	}
+}

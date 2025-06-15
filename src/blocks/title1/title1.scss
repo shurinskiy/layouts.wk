@@ -1,0 +1,8 @@
+@use 'lib' as *;
+
+.title1 {
+	$self: &;
+	font-weight: 700;
+	color: var(--grey);
+	font-size: fluid(28px, 22px);
+}

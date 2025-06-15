@@ -1,20 +1,30 @@
-<header class="header header_fixed" data-scroll-lock-fill-gap> 
-	<div class="header__inner container">
-		<a class="header__logo" href="./">Logo</a>
-		<div class="header__navi h-navi">
-			<button class="h-navi__close"></button>
-			<nav class="h-navi__menu" data-scroll-lock-scrollable>
-				<a class="h-navi__link" href="./course.html">Course</a>
-				<a class="h-navi__link" href="./">Fugaquae</a>
-				<a class="h-navi__link" href="./">Ullamquidem</a>
-				<a class="h-navi__link" href="./">Reprehenderit</a>
-				<a class="h-navi__link" href="./">Accusamus</a>
-				<a class="h-navi__link" href="./">Cumvel</a>
-			</nav>
+<header class="header1 @@if(this.mod){header_@@mod}">
+	<div class="header1__inner container">
+		<a class="header1__logo" href="./"><img src="./images/logo.svg" alt=""></a>
+		<div class="header1__navi navi1">
+			<button class="header1__close navi1__close"><svg><use xlink:href="#close"></use></svg></button>
+			<div class="navi1__inner">
+				<nav class="navi1__menu">
+					<a class="navi1__link" href="./">consectetur</a>
+					<a class="navi1__link" href="./">reiciendis</a>
+					<a class="navi1__link" href="./">distinctio</a>
+					<a class="navi1__link" href="./">similique</a>
+					<a class="navi1__link" href="./">temporibus</a>
+					<a class="navi1__link" href="./">molestiae</a>
+				</nav>
+				<div class="navi1__utils">
+					<form class="navi1__search search1 search1-js" action="./">
+						<div class="search1__inner">
+							<input type="text" value="">
+							<input type="submit" value="">
+						</div>
+					</form>
+					<button class="navi1__feedback" data-moved=".navi1__menu, sm">
+						<svg><use xlink:href="#mail"></use></svg>
+					</button>
+				</div>
+			</div>
 		</div>
-		<div class="header__side">
-			<a class="header__button" href="./">Contact us</a>
-			<button class="header__navi-toggle"></button>
-		</div>
+		<button class="header1__toggle toggle1"><span></span><span></span><span></span></button>
 	</div>
-</header> 
+</header>

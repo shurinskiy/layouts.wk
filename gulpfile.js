@@ -1,10 +1,12 @@
 const gulp = require('gulp');
+const merge2 = require('merge2');
 const sass = require('gulp-sass')(require('sass'));
 const $ = require('gulp-load-plugins')({ pattern: ['*', '!sass'] });
 const isRemote = process.argv.indexOf('--remote') !== -1;
 const isSync = process.argv.indexOf('--sync') !== -1;
 const isDev = process.argv.indexOf('--dev') !== -1;
 const isProd = !isDev;
+const version = +isProd && Date.now();
 
 // console.log(JSON.stringify($));
 let pckg = require('./package.json');
@@ -39,12 +41,12 @@ let pth = {
 		root: './src/',
 		html: './src/[^_]*.html',
 		js: './src/js/common.js',
-		// jslib: './src/js/!(common)*.js',
 		css: './src/scss/style.scss',
 		scss: './src/scss/lib/',
-		img: './src/images/**/!(icon-*.svg|shape-*.svg)',
-		shp: './src/images/**/shape-*.svg',
-		icn: './src/images/**/icon-*.svg',
+		// img: './src/images/**/!(icon-*.svg|shape-*.svg)',
+		img: './src/images/!(icons|static){,/**}',
+		static: './src/images/static/**/*',
+		icn: './src/images/icons/**/*.svg',
 		fnts: './src/fonts/**/*.*',
 		tmpl: './src/templates/'
 	},
@@ -52,9 +54,9 @@ let pth = {
 		html: './src/**/*.html',
 		js: ['./src/js/**/*.js','./src/blocks/**/(*.js|*.json)'],
 		css: ['./src/scss/**/*.scss','./src/blocks/**/*.scss'],
-		img: './src/images/**/!(icon-*.svg|shape-*.svg)',
-		shp: './src/images/**/shape-*.svg',
-		icn: './src/images/**/icon-*.svg',
+		img: ['./src/images/**', '!./src/images/icons/**'],
+		static: './src/images/static/**/*',
+		icn: './src/images/icons/**/*.svg',
 		fnts: './src/fonts/**/*.*'
 	}
 };
@@ -66,6 +68,14 @@ function swallowError (error) {
 
 function clear() {
 	return $.del(pth.pbl.root + '*');
+}
+
+function root() {
+	return gulp.src([
+		'./src/*',
+		'!./src/*.html',
+	], { dot: true, nodir: true })
+	.pipe(gulp.dest(pth.pbl.root));
 }
 
 function js() {
@@ -96,7 +106,16 @@ function html() {
 	return gulp.src(pth.src.html)
 		.pipe($.fileInclude({ prefix: '@@', basepath: pth.src.tmpl }))
 		.on('error', swallowError)
-		// .pipe($.newer(pth.pbl.html))
+		.pipe($.if(isProd, $.typograf({
+			locale: ['ru', 'en-US'],
+			htmlEntity: { type: 'digit' },
+			safeTags: [
+				['<\\?php', '\\?>'],
+				['<no-typography>', '</no-typography>'],
+			],
+		})))
+		.on('error', swallowError)
+		.pipe($.replace(/(\.(css|js)\?v=)\d+\b/g, `$1${version}`))
 		.pipe(gulp.dest(pth.pbl.html))
 		.pipe($.if(isSync, $.browserSync.stream()));
 }
@@ -104,7 +123,7 @@ function html() {
 function styles() {
 	return gulp.src(pth.src.css)
 		.pipe($.if(isDev, $.sourcemaps.init()))
-		.pipe($.sassGlob())
+		.pipe($.globSass())
 		.pipe(sass())
 		.on('error', swallowError)
 		.pipe($.autoprefixer({ 
@@ -123,29 +142,46 @@ function styles() {
 }
 
 function images() {
-	return gulp.src(pth.src.img)
+	const processed = gulp.src(pth.src.img)
 		.pipe($.newer(pth.pbl.img))
-		.pipe(gulp.dest(pth.pbl.img))
+		.pipe($.webp())
+		.pipe(gulp.dest(pth.pbl.img));
+
+	const copied = gulp.src(pth.src.static)
+		.pipe($.newer(pth.src.static))
+		.pipe(gulp.dest(pth.pbl.img));
+
+	return merge2(processed, copied)
 		.pipe($.if(isSync, $.browserSync.stream()));
 }
 
 function icons() {
 	return gulp.src(pth.src.icn)
-	.pipe($.svgSymbolView({
-		name: 'icons-sprite',
-		monochrome: {
-			blue: '#638bf5',
-			dark: '#46557b',
-			white: '#ffffff'
+	.pipe($.svgSprite({
+		svg: { 
+			xmlDeclaration: false,
+			rootAttributes: { class: 'sprite' }
+		},
+		shape: {
+			transform: [{
+				svgo: {
+					plugins: [
+						{ name: 'preset-default' },
+						{ name: 'removeAttrs', params: { attrs: '*:(fill|data-*|id|class|style|stroke)' }},
+					]
+				}
+			}]
+		},
+		mode: {
+			symbol: {
+				dest: './',
+				sprite: '_sprite.svg',
+				example: ! isProd
+			}
 		}
 	}))
-	.pipe(gulp.dest(pth.pbl.img))
-};
-
-function shapes() {
-	return gulp.src(pth.src.shp)
-	.pipe($.svgSymbolView('svg-sprite'))
-	.pipe(gulp.dest(pth.pbl.img))
+	.on('error', swallowError)
+	.pipe(gulp.dest(pth.src.tmpl))
 };
 
 function fonts() {
@@ -195,14 +231,12 @@ function watch() {
 	gulp.watch(pth.wtch.js, js);
 	gulp.watch(pth.wtch.html, html);
 	gulp.watch(pth.wtch.css, styles);
-	// gulp.watch(pth.wtch.img, gulp.parallel(images, icons));
 	gulp.watch(pth.wtch.img, images);
 	gulp.watch(pth.wtch.icn, icons);
-	gulp.watch(pth.wtch.shp, shapes);
 	gulp.watch(pth.wtch.fnts, fonts);
 }
 
-const build = gulp.series(clear, gulp.parallel(html, js, jslib, styles, images, icons, shapes, fonts));
+const build = gulp.series(clear, gulp.parallel(root, html, js, jslib, styles, images, icons, fonts));
 
 exports.build = build;
 exports.watch = gulp.series(build, watch);

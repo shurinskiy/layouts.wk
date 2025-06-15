@@ -1,0 +1,16 @@
+:root {
+	--size: 16px;
+	--white: #fff;
+	--background: #fafafa;
+	--bright: #eee;
+	--light: #ccc;
+	--grey: #999;
+	--dark: #555;
+	--black: #222;
+	--container: 1400px;
+	--gap: 24px;
+	
+	@media screen and (max-width: 480px) {
+		--gap: 16px;
+	}
+}
