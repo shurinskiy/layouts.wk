@@ -62,6 +62,8 @@ export const tweakerSelect = (items, props = {}) => {
 			this.head.className = `${this.props.name}__head`;
 			this.body.className = `${this.props.name}__body`;
 			this.list.className = `${this.props.name}__list`;
+			this.openClassName = `${this.props.name}_opened`;
+			this.flipClassName = `${this.props.name}_flipped`;
 
 			this.#init();
 		}
@@ -106,7 +108,7 @@ export const tweakerSelect = (items, props = {}) => {
 		#update = (i, e) => {
 			e?.preventDefault();
 
-			this.wrapper.classList.remove(`${this.props.name}_opened`);
+			this.wrapper.classList.remove(this.openClassName, this.flipClassName);
 			this.head.textContent = this.items[i].textContent;
 			this.#dataset(this.items[i], this.head, false);
 			this.select.value = this.items[i].getAttribute('data-value');
@@ -121,14 +123,21 @@ export const tweakerSelect = (items, props = {}) => {
 		#init() {
 			this.#render();
 
-			this.head.addEventListener('click', () => this.wrapper.classList.toggle(`${this.props.name}_opened`));
+			this.head.addEventListener('click', () => {
+				this.wrapper.classList.toggle(this.openClassName);
+				this.wrapper.classList.contains(this.openClassName)
+					? requestAnimationFrame(() => 
+						this.wrapper.classList.toggle(this.flipClassName, this.body.getBoundingClientRect().bottom > window.innerHeight)
+					) : this.wrapper.classList.remove(this.flipClassName);
+			});
+
 			this.options.forEach((option, i) => option.addEventListener('click', () => this.#update(i)));
 			this.items.forEach((item, i) => item.addEventListener('click', e => this.#update(i, e)));
 				
 			['click','touchstart'].forEach(event => {
 				document.addEventListener(event, e => { 
-					if (!this.wrapper.contains(e.target)) 
-						this.wrapper.classList.remove(`${this.props.name}_opened`);
+					if (!this.wrapper.contains(e.target))
+						this.wrapper.classList.remove(this.openClassName, this.flipClassName);
 				}, { passive: false });
 			});
 		}

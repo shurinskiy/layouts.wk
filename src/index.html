@@ -157,16 +157,39 @@
 					</div>
 				</div>
 			</aside>
-			<div class="catalog1__items">
-				@@include("_card1.html", { cls: 'catalog1__item', image: 1 })
-				@@include("_card1.html", { cls: 'catalog1__item', image: 2 })
-				@@include("_card1.html", { cls: 'catalog1__item', image: 3 })
-				@@include("_card1.html", { cls: 'catalog1__item', image: 4 })
-				@@include("_card1.html", { cls: 'catalog1__item', image: 5 })
-				@@include("_card1.html", { cls: 'catalog1__item', image: 6 })
-				@@include("_card1.html", { cls: 'catalog1__item', image: 7 })
-
-			</div>
+			<main class="catalog1__main">
+				<div class="catalog1__items">
+					@@include("_card1.html", { cls: 'catalog1__item' })
+					@@include("_card1.html", { cls: 'catalog1__item' })
+					@@include("_card1.html", { cls: 'catalog1__item' })
+					@@include("_card1.html", { cls: 'catalog1__item' })
+					@@include("_card1.html", { cls: 'catalog1__item' })
+					@@include("_card1.html", { cls: 'catalog1__item' })
+					@@include("_card1.html", { cls: 'catalog1__item' })
+				</div>
+				<div class="pagination1">
+					<div class="pagination1__links">
+						<a class="pagination1__link pagination1__link_prev" href="./">
+							<svg><use xlink:href="#prev"></use></svg>
+						</a>
+						<span class="pagination1__link pagination1__link_current">1</span>
+						<a class="pagination1__link" href="./">2</a>
+						<a class="pagination1__link" href="./">3</a>
+						<a class="pagination1__link" href="./">4</a>
+						<a class="pagination1__link" href="./">5</a>
+						<span class="pagination1__omit">...</span>
+						<a class="pagination1__link" href="./">10</a>
+						<a class="pagination1__link pagination1__link_next" href="./">
+							<svg><use xlink:href="#next"></use></svg>
+						</a>
+					</div>
+					<select class="pagination1__select">
+						<option value="12">Показывать по 12</option>
+						<option value="24">Показывать по 24</option>
+						<option value="all">Показать все</option>
+					</select>
+				</div>
+			</main>
 		</div>
 	</div>
 </main>
