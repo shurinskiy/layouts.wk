@@ -7,8 +7,8 @@ export const tweakerRangeSingle = (item, options = {}) => {
 			this.options = {
 				class: 'range',
 				min: item.min || 0,
-				max: item.max || 1000,
-				current: item.value || 100,
+				max: item.max || 100,
+				current: item.value || 50,
 				...options
 			};
 
@@ -37,14 +37,14 @@ export const tweakerRangeSingle = (item, options = {}) => {
 			this.$value.type = 'number';
 			this.$value.value = this.options.current;
 
-			(previous) ? previous.after(this.$wrapper) : select.parentNode.prepend(this.$wrapper);
+			(previous) ? previous.after(this.$wrapper) : this.$range.parentNode.prepend(this.$wrapper);
 			this.$wrapper.append(this.$value, this.$range, this.$progress);
 		}
 
 		progress() {
 			const val = Math.min(this.$range.value, this.options.max);
 			const offset = ((val - this.options.min) / (this.options.max - this.options.min) * 100).toFixed(2);
-			this.$progress.style.setProperty("width", `${offset}%`);
+			this.$wrapper.style.setProperty("--progress", `${offset}`);
 		}
 		
 		init() {

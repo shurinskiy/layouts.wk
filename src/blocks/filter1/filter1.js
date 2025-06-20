@@ -1,4 +1,3 @@
-import { tweakerRangeDouble } from "../../js/libs/tweakerRangeDouble";
 import { updateLocalStorage } from "../../js/libs/utils";
 import slide from "../../js/libs/driveSlide";
 
@@ -15,8 +14,6 @@ import slide from "../../js/libs/driveSlide";
 			filter.classList.toggle('opened', opened);
 			updateLocalStorage('filters', i, opened);
 		});
-
-		tweakerRangeDouble(filter.querySelector('.filter1__range'), { input: true, class: 'range1' });
 	});
 
 })();
