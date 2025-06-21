@@ -71,6 +71,7 @@
 	"dependencies": {
 		"@fluejs/noscroll": "^1.0.0",
 		"enquire.js": "^2.1.6",
+		"inputmask": "^5.0.9",
 		"swiped-events": "^1.2.0",
 		"swiper": "^11.2.8"
 	}

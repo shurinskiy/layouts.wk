@@ -1,0 +1,200 @@
+@use 'lib' as *;
+
+.form1 {
+	$self: &;
+	--err: #c26d3b;
+	display: flex;
+	flex-flow: column nowrap;
+	gap: 24px;
+
+	&.success {
+		#{$self}__success {
+			display: flex;
+		}
+		
+		#{$self}__field, #{$self}__submit {
+			visibility: hidden;
+		}
+	}
+
+	&.pending {
+		#{$self}__submit {
+			span {
+				color: transparent;
+				visibility: hidden;
+			}
+	
+			img {
+				display: block;
+			}
+		}
+	}
+
+	&__success {
+		position: absolute;
+		inset: 0;
+		animation: fadeIn 0.4s;
+		flex-flow: column nowrap;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		color: var(--grey);
+		font-size: fluid(38px, 22px);
+		font-weight: 200;
+		padding: 32px;
+		display: none;
+	}
+
+	&__field {
+
+		&:has(input[name="region"]) {
+			@include hide();
+		}
+				
+		&.error {
+			#{$self}__input {
+				border-color: var(--err);
+				box-shadow: 0 0 10px rgba(181, 69, 8, 0.3);
+			}
+		}
+	}
+
+	&__input {
+		background-color: var(--white);
+		border: 1px solid var(--light);
+		transition: border-color 0.4s, box-shadow 0.4s;
+		padding: 14px;
+		display: flex;
+		gap: 15px;
+		
+		input, textarea {
+			@extend %reset-input;
+			font-weight: 300;
+			font-size: 17px;
+			color: var(--dark);
+			width: 100%;
+			
+			&::placeholder {
+				color: var(--light);
+			}
+		}
+
+		textarea {
+			min-height: 120px;
+			max-height: 250px;
+
+			&::-webkit-scrollbar {
+				width: 5px;
+				height: 5px;
+			}
+
+			&::-webkit-scrollbar-track {
+				background-color: var(--bright);
+			}
+
+			&::-webkit-scrollbar-thumb {
+				background-color: var(--grey);
+			}
+
+			&::-webkit-scrollbar-corner {
+				background-color: transparent;
+			}
+		}
+
+		svg {
+			fill: var(--grey);
+			aspect-ratio: 1;
+			width: 22px;
+			align-self: flex-start;
+		}
+	}
+
+	&__error {
+		display: block;
+		color: var(--err);
+		font-size: 13px;
+
+		&:not(:empty) {
+			padding-top: 10px;
+		}
+	}
+
+	&__file {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		white-space: nowrap;
+		box-sizing: border-box;
+		cursor: pointer;
+		min-height: 48px;
+		border: 1px solid var(--light);
+		background-color: var(--bright);
+		color: rgb(var(--dark));
+		padding: 5px 10px;
+		width: fit-content;
+		font-size: 17px;
+		position: relative;
+		transition: background-color 0.3s;
+
+		&.added span {
+			display: flex;
+		}
+
+		input[type='file'] {
+			display: none;
+		}
+			
+		span {
+			display: none;
+			align-items: center;
+			position: absolute;
+			inset: 5px 10px;
+			background-color: var(--bright);
+			animation: fadeIn 0.3s;
+			overflow: hidden;
+
+			&::before {
+				display: block;
+				content: '';
+				width: 27px;
+				height: 19px;
+				flex-shrink: 0;
+				background: svg-url('<svg width="28" height="20" viewBox="0 0 28 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M27.0223 9.7491C26.3102 8.81707 25.2204 8.11869 23.7352 7.77296C23.9012 3.62993 21.2612 0.884226 18.1079 0.180387C15.0491 -0.502355 11.5085 0.727283 9.54771 4.30824C8.32401 3.30621 6.83251 3.33815 5.68436 3.96974C4.53321 4.60298 3.62729 5.91776 3.79724 7.39683C2.42273 7.9201 1.43611 8.73737 0.810497 9.72905C0.0925723 10.867 -0.110998 12.1733 0.0537186 13.3911C0.373999 15.759 2.16527 18.0566 4.6457 18.0566H12.4257V20H16.782V18.0566H23.5052C25.9805 18.0566 27.7336 15.6523 27.9711 13.3098C28.0941 12.0964 27.8329 10.8101 27.0223 9.7491ZM17.807 1.62726C15.1172 1.02687 11.9265 2.22191 10.3929 5.86382L9.90446 7.02365L9.16824 6.01396C8.32343 4.85534 7.20327 4.80996 6.3543 5.27698C5.44951 5.77469 4.99203 6.7471 5.31387 7.62943L5.59015 8.38686L4.83722 8.60397C3.39345 9.02029 2.50805 9.74348 2.0063 10.5388C1.50133 11.3393 1.34533 12.2753 1.46847 13.1857C1.72392 15.0742 3.09811 16.5766 4.6457 16.5766H12.4257V13.4318H9.28978L14.54 7.5674L19.8613 13.4172H16.782V16.5766H23.5052C25.0058 16.5766 26.3608 15.025 26.5503 13.1552C26.6408 12.2626 26.4452 11.3785 25.9022 10.6677C25.3619 9.96053 24.4177 9.34679 22.8693 9.11146L22.1837 9.00728L22.2634 8.29422C22.6758 4.60041 20.4899 2.2261 17.807 1.62726Z" fill="#555"/></svg>') center / contain no-repeat transparent;
+				margin-right: 8px;
+			}
+		}
+	}
+
+	&__buttons {
+		display: flex;
+		justify-content: space-between;
+		gap: 24px;
+
+		@include media('<=xxs') {
+			flex-flow: column nowrap;
+		}
+	}
+
+	&__submit {
+		@extend %reset-button;
+		min-height: 48px;
+		padding: 5px 32px;
+		line-height: 1.25;
+		font-size: 17px;
+		display: flex;
+		position: relative;
+		align-items: center;
+		justify-content: center;
+		background-color: var(--light);
+		
+		img {
+			display: none;
+			position: absolute;
+			translate: -50% -50%;
+			height: 70%;
+			left: 50%;
+			top: 50%;
+		}
+	}
+}

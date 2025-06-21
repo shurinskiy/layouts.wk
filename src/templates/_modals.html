@@ -1,0 +1,51 @@
+<div class="modal__hidden">
+	<div id="feedback">
+		<form class="form1" action="./">
+			<div class="form1__success">Спасибо!<br/> Ваше сообщение успешно отправлено.</div>
+			<div class="form1__field">
+				<label class="form1__input">
+					<svg><use xlink:href="#user"></use></svg>
+					<input type="text" name="region" placeholder="Ваш регион:" data-rules="omit">
+				</label>
+				<span class="form1__error"></span>
+			</div>
+			<div class="form1__field">
+				<label class="form1__input">
+					<svg><use xlink:href="#user"></use></svg>
+					<input type="text" name="name" placeholder="Ваше имя:" data-rules="req, name, min:2">
+				</label>
+				<span class="form1__error"></span>
+			</div>
+			<div class="form1__field">
+				<label class="form1__input">
+					<svg><use xlink:href="#phone"></use></svg>
+					<input type="tel" name="phone" placeholder="Ваш телефон:" data-rules="req">
+				</label>
+				<span class="form1__error"></span>
+			</div>
+			<div class="form1__field">
+				<label class="form1__input">
+					<svg><use xlink:href="#mail"></use></svg>
+					<input type="text" name="email" placeholder="Ваш email:" data-rules="req, email, min:8">
+				</label>
+				<span class="form1__error"></span>
+			</div>
+			<div class="form1__field">
+				<label class="form1__input">
+					<svg><use xlink:href="#talk"></use></svg>
+					<textarea name="message" placeholder="Ваше сообщение:" data-rules="min:10, max:300"></textarea>
+				</label>
+				<span class="form1__error"></span>
+			</div>
+			<div class="form1__buttons">
+				<label class="form1__file">
+					<input type="file">Прикрепить файл<span></span>
+				</label>
+				<button class="form1__submit">
+					<span>Отправить</span>
+					<img src="./images/spinner.svg" alt="">
+				</button>
+			</div>
+		</form>
+	</div>	
+</div>

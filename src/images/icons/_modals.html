@@ -1,0 +1,39 @@
+<div class="modal__hidden">
+	<div id="feedback">
+		<form class="form" action="./">
+			<div class="form__success">Спасибо!<br/> Ваше сообщение успешно отправлено.</div>
+			<div class="form__field">
+				<div class="form__input">
+					<svg><use xlink:href="#user"></use></svg>
+					<input type="text" name="region" placeholder="Ваш регион:" data-rules="omit">
+				</div>
+				<span class="form__error"></span>
+			</div>
+			<div class="form__field">
+				<div class="form__input">
+					<svg><use xlink:href="#user"></use></svg>
+					<input type="text" name="name" placeholder="Ваше имя:" data-rules="req, name, min:2">
+				</div>
+				<span class="form__error"></span>
+			</div>
+			<div class="form__field">
+				<div class="form__input">
+					<svg><use xlink:href="#mail"></use></svg>
+					<input type="text" name="email" placeholder="Ваш email:" data-rules="req, email, min:8">
+				</div>
+				<span class="form__error"></span>
+			</div>
+			<div class="form__field">
+				<div class="form__input">
+					<svg><use xlink:href="#talk"></use></svg>
+					<textarea name="message" placeholder="Ваше сообщение:" data-rules="min:10, max:300"></textarea>
+				</div>
+				<span class="form__error"></span>
+			</div>
+			<button class="form__submit">
+				<span>Отправить</span>
+				<img src="./images/spinner.svg" alt="">
+			</button>
+		</form>
+	</div>	
+</div>

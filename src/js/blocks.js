@@ -7,3 +7,5 @@ import "../blocks/select1/select1.js";
 import "../blocks/select2/select2.js";
 import "../blocks/range1/range1.js";
 import "../blocks/range2/range2.js";
+import "../blocks/modal/modal.js";
+import "../blocks/form1/form1.js";
