@@ -25,6 +25,12 @@
 		display: flex !important;
 	}
 
+	&_feedback {
+		#{$self}__body {
+			max-width: 500px;
+		}
+	}
+
 	&__hidden {
 		display: none;
 	}
@@ -60,7 +66,7 @@
 		position: relative;
 		overflow-x: hidden;
 		background-color: var(--background);
-		border-radius: 12px;
+		border-radius: 6px;
 		margin: auto;
 		padding: 60px 24px 24px;
 		width: 100%;
