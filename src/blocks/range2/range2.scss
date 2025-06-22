@@ -2,72 +2,95 @@
 
 .range2 {
 	$self: &;
-	background-color: var(--light);
-	border-radius: 100px;
+	margin: 36px 0 16px;
 	position: relative;
-	height: 2px;
-	margin: 34px 0 16px;
 
-	input[type="number"] {
-		@extend %reset-input;
-		width: 32px;
-		padding: 3px 0 10px;
-		text-align: center;
-		font-weight: 500;
-		font-size: 13px;
-		line-height: 1.0;
-		color: var(--dark);
+	&__value {
 		position: absolute;
-		left: calc(var(--progress, 0) * 1% - 10px + (-12px * var(--progress, 0) / 100));
-		bottom: 8px;
+		left: calc(var(--progress, 0) * 1% - 12px + (-12px * var(--progress, 0) / 100));
+		bottom: 15px;
 		z-index: 3;
-		background: svg-url('<svg width="32" height="29" viewBox="0 0 32 29" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M0 19C0 21.2091 1.79086 23 4 23H12L16 29L20 23H28C30.2091 23 32 21.2091 32 19V4C32 1.79086 30.2091 0 28 0H4C1.79086 0 0 1.79086 0 4V19ZM30 4V19C30 20.1046 29.1046 21 28 21H4C2.89543 21 2 20.1046 2 19V4C2 2.89543 2.89543 2 4 2H28C29.1046 2 30 2.89543 30 4Z" fill="#CCCCCC"/></svg>') center / 100% 100% no-repeat transparent;
-		
-		&::-webkit-inner-spin-button, 
-		&::-webkit-outer-spin-button {
-			appearance: none;
-			margin: 0;
+		width: 36px;
+		height: 24px;
+		border: 2px solid var(--light);
+		border-radius: 4px;
+
+		&::after {
+			display: block;
+			content: '';
+			position: absolute;
+			top: 100%;
+			left: calc(50% - 6px);
+			background-color: var(--light);
+			clip-path: polygon(0 0, 100% 0, 50% 100%);
+			height: 8px;
+			width: 12px;
+		}
+
+		input[type="number"] {
+			@extend %reset-input;
+			color: var(--dark);
+			text-align: center;
+			line-height: 1.0;
+			font-weight: 500;
+			font-size: 13px;
+			display: block;
+			height: 100%;
+			width: 100%;
+			
+			&::-webkit-inner-spin-button, 
+			&::-webkit-outer-spin-button {
+				appearance: none;
+				margin: 0;
+			}
 		}
 	}
 
-	input[type="range"] {
-		@extend %reset-input;
-		display: block;
-		position: absolute;
+	&__slider {
+		background-color: var(--light);
+		border-radius: 100px;
+		position: relative;
 		height: 2px;
-		width: 100%;
-		pointer-events: none;
-		z-index: 2;
 
-		&::-webkit-slider-thumb {
-			height: 12px;
-			width: 12px;
-			background: var(--dark);
-			border-radius: 100px;
-			pointer-events: auto;
-			cursor: pointer;
-			appearance: none;
+		input[type="range"] {
+			@extend %reset-input;
+			display: block;
+			position: absolute;
+			height: 2px;
+			width: 100%;
+			pointer-events: none;
+			z-index: 2;
+
+			&::-webkit-slider-thumb {
+				height: 12px;
+				width: 12px;
+				background: var(--dark);
+				border-radius: 100px;
+				pointer-events: auto;
+				cursor: pointer;
+				appearance: none;
+			}
+
+			&::-moz-range-thumb {
+				height: 12px;
+				width: 12px;
+				background: var(--dark);
+				border-radius: 100px;
+				pointer-events: auto;
+				cursor: pointer;
+				appearance: none;
+			}
+			
 		}
 
-		&::-moz-range-thumb {
-			height: 12px;
-			width: 12px;
-			background: var(--dark);
-			border-radius: 100px;
-			pointer-events: auto;
-			cursor: pointer;
-			appearance: none;
+		span {
+			display: block;
+			position: absolute;
+			background-color: var(--dark);
+			width: calc(var(--progress, 0) * 1%);
+			height: 100%;
+			left: 0;
+			top: 0;
 		}
-		
-	}
-
-	span {
-		display: block;
-		position: absolute;
-		background-color: var(--dark);
-		width: calc(var(--progress, 0) * 1%);
-		height: 100%;
-		left: 0;
-		top: 0;
 	}
 }

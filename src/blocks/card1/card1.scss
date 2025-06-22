@@ -2,10 +2,31 @@
 
 .card1 {
 	$self: &;
-	background-color: var(--white);
-	border: 1px solid var(--bright);
-	display: flex;
-	flex-flow: column nowrap;
+	position: relative;
+	height: var(--height, 'auto');
+
+	&:not([style*="--height"]) {
+		#{$self}__wrapper {
+			position: static;
+		}
+
+		#{$self}__hidden {
+			max-height: 0;
+			transition: none;
+		}
+	}
+	
+	&__wrapper {
+		width: 100%;
+		min-height: 100%;
+		background-color: var(--white);
+		border: 1px solid var(--bright);
+		display: flex;
+		flex-flow: column nowrap;
+		position: absolute;
+		z-index: 10;
+		top: 0;
+	}
 
 	&__image {
 		height: 200px;
@@ -15,7 +36,7 @@
 			height: 100%;
 			display: block;
 			object-fit: cover;
-			filter: grayscale(0.7)
+			// filter: grayscale(0.7)
 		}
 	}
 
@@ -24,21 +45,37 @@
 		display: flex;
 		flex-flow: column nowrap;
 		flex-grow: 1;
-		gap: 15px;
 	}
 
 	&__price {
 		font-weight: 700;
 		color: var(--dark);
+		margin-bottom: 15px;
+	}
+	
+	&__title {
+		margin-bottom: 15px;
+	}
+	
+	&__text {
+		font-size: 13px;
 	}
 
-	&__title {
-		
+	&__hidden {
+		margin-top: auto;
+		overflow: hidden;
+		max-height: 200px;
+		transition: max-height 0.5s linear;
+
+		&::before {
+			display: block;
+			height: 15px;
+			content: '';
+		}
 	}
 
 	&__button {
 		display: block;
-		margin-top: auto;
 		text-align: center;
 		text-decoration: none;
 		color: var(--dark);
