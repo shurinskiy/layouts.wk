@@ -123,5 +123,9 @@
 				background-color: transparent;
 			}
 		}
+
+		@include media('<=400px') {
+			padding-right: 20px;
+		}
 	}
 }

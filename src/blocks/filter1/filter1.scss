@@ -17,7 +17,7 @@
 	&__title {
 		padding: 10px;
 		font-weight: 500;
-		background-color: var(--bright);
+		background-color: var(--dawn);
 		justify-content: space-between;
 		align-items: center;
 		cursor: pointer;
@@ -30,7 +30,7 @@
 
 		svg {
 			transition: rotate 0.2s;
-			fill: var(--grey);
+			fill: var(--dark);
 			aspect-ratio: 1;
 			display: block;
 			width: 18px;

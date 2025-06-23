@@ -24,7 +24,7 @@
 		display: flex;
 		flex-flow: column nowrap;
 		position: absolute;
-		z-index: 10;
+		z-index: 2;
 		top: 0;
 	}
 
@@ -80,7 +80,7 @@
 		text-decoration: none;
 		color: var(--dark);
 		padding: 10px 5px;
-		background-color: var(--bright);
+		background-color: var(--dawn);
 		font-weight: 500;
 	}
 }

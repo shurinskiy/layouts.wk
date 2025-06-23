@@ -3,7 +3,7 @@
 .header1 {
 	$self: &;
 	padding-right: calc(var(--noscroll-target-scrollbar-width, 0px));
-	background-color: var(--bright);
+	background-color: var(--dawn);
 	transition: box-shadow 0.3s;
 	position: fixed;
 	z-index: 12;
